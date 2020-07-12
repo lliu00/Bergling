@@ -1,9 +1,6 @@
 package com.yjz;
 
 import com.yjz.mapper.BlogMapper;
-import com.yjz.mapper.UserMapper;
-import com.yjz.model.Blog;
-import com.yjz.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

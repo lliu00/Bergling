@@ -2,16 +2,24 @@ package com.yjz.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yjz.model.Result;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.LockedException;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsUtils;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.PrintWriter;
 
 @Configuration
@@ -21,6 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     PasswordEncoder passwordEncoder() {
         return NoOpPasswordEncoder.getInstance();
     }
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -45,6 +54,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     printWriter.close();
                 })
                 .failureHandler(((httpServletRequest, httpServletResponse, e) -> {
+                    Logger logger = LoggerFactory.getLogger(getClass());
+                    logger.warn(httpServletRequest.getParameter("username"));
+                    logger.warn(httpServletRequest.getParameter("password"));
+                    logger.warn(httpServletResponse.toString());
                     httpServletResponse.setContentType("application/json;charset=utf-8");
                     PrintWriter printWriter = httpServletResponse.getWriter();
                     printWriter.write(new ObjectMapper().writeValueAsString(Result.fail().add("ErrorMsg", e.getMessage())));
@@ -70,6 +83,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 });
 
     }
+
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {

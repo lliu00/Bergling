@@ -17,7 +17,7 @@ public class BlogController {
     @Autowired
     BlogService blogService;
 
-    @GetMapping("/blogs")
+    @GetMapping({"/", "/blogs"})
     public Result list(@RequestParam(value = "page", defaultValue = "1") int page) {
         PageHelper.startPage(page, 5);
         List<Blog> blogs = blogService.list();
