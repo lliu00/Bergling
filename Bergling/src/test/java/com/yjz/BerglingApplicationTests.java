@@ -1,6 +1,8 @@
 package com.yjz;
 
-import com.yjz.mapper.BlogMapper;
+import com.yjz.mapper.UserMapper;
+import com.yjz.model.User;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,12 +13,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 class BerglingApplicationTests {
 
     @Autowired
-    BlogMapper blogMapper;
+    UserMapper userMapper;
 
     @Test
     void test() {
         Logger logger = LoggerFactory.getLogger(getClass());
-        logger.info(blogMapper.getById(1L).getContent());
+        User user = userMapper.getByUsername("admin");
+        logger.info(user.toString());
+        Assertions.assertEquals("admin", user.getRole());
     }
 
 }

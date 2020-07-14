@@ -5,6 +5,8 @@ import com.github.pagehelper.PageInfo;
 import com.yjz.model.Blog;
 import com.yjz.model.Result;
 import com.yjz.service.BlogService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +29,8 @@ public class BlogController {
     @GetMapping("/blogs/{id}")
     public Result detail(@PathVariable("id") Long id) {
         Blog blog = blogService.getById(id);
+        Logger logger = LoggerFactory.getLogger(getClass());
+        logger.info(blog.toString());
         return Result.success().add("blog", blog);
     }
 
@@ -34,11 +38,12 @@ public class BlogController {
     //新增博客和编辑博客怎么区分
     @PostMapping("/blogs")
     public Result edit(@RequestBody Blog blog) {
-
         //文章ID存在，编辑文章
         if (blog.getId() != null) {
-
+            blogService.update(blog);
+        } else {
+            blogService.save(blog);
         }
-        return Result.success();
+        return Result.success("保存成功").add("blog", blog);
     }
 }

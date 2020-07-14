@@ -1,5 +1,6 @@
 package com.yjz.mapper;
 
+import com.yjz.model.Blog;
 import com.yjz.model.User;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -7,5 +8,6 @@ import org.apache.ibatis.annotations.Mapper;
 public interface UserMapper {
     User getById(Long id);
 
-    User getByUsername(String name);
+    User getByUsername(String username);
+
 }

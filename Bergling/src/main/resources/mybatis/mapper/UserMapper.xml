@@ -9,7 +9,8 @@
     <select id="getById" resultType="User">
     select * from user where id = #{id}
   </select>
-    <select id="getUserByUsername" resultType="User">
-        SELECT * FROM user WHERE username=#{username}
+
+    <select id="getByUsername" resultType="User">
+        SELECT * FROM user WHERE username = #{username}
     </select>
 </mapper>

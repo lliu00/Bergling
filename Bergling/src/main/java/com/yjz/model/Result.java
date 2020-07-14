@@ -30,6 +30,32 @@ public class Result {
         return result;
     }
 
+    public static Result success(String msg) {
+        Result result = Result.success();
+        result.setMsg(msg);
+        return result;
+    }
+
+    public static Result fail(String msg) {
+        Result result = Result.success();
+        result.setMsg(msg);
+        return result;
+    }
+
+    public static Result success(int code, String msg) {
+        Result result = Result.success();
+        result.setCode(code);
+        result.setMsg(msg);
+        return result;
+    }
+
+    public static Result fail(int code, String msg) {
+        Result result = Result.success();
+        result.setCode(code);
+        result.setMsg(msg);
+        return result;
+    }
+
     public Result add(String key, Object object) {
         this.result.put(key, object);
         return this;
