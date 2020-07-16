@@ -7,7 +7,8 @@
 
 <!--    Blog getById(Long id);-->
     <select id="list" resultType="Blog">
-        SELECT * FROM blog
+        SELECT * FROM blog ORDER BY id DESC
+
     </select>
 
     <select id="getById" resultType="Blog">
@@ -18,21 +19,21 @@
         UPDATE blog
         SET title = #{blog.title},
             content = #{blog.content},
-            create_by = #{blog.create_by},
-            create_at = #{blog.create_at},
+            createdBy = #{blog.createdBy},
+            createdAt = #{blog.createdAt},
             description = #{blog.description}
         WHERE id = #{blog.id}
     </select>
 
     <select id="save" resultType="Blog">
         INSERT INTO blog (
-                title, content, create_by, create_at, description
+                title, content, createdBy, createdAt, description
         )
         VALUES (
                 #{blog.title},
                 #{blog.content},
-                #{blog.create_by},
-                #{blog.create_at},
+                #{blog.createdBy},
+                #{blog.createdAt},
                 #{blog.description}
                );
     </select>

@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.cors.CorsUtils;
 
 import java.io.PrintWriter;
+import java.util.Enumeration;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -31,11 +32,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        Logger logger = LoggerFactory.getLogger(getClass());
         http.cors().and().csrf().disable().authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .and()
+                .rememberMe().tokenValiditySeconds(1209600)
+                .and()
                 .authorizeRequests()
-                .antMatchers("/css/**", "/blogs").permitAll()
+                .antMatchers("/css/**", "/blogs", "/", "/blogs/{id}").permitAll()
                 .antMatchers("/admin").hasRole("admin")
                 .antMatchers("/hello").hasRole("admin")
                 .anyRequest().authenticated()
@@ -43,14 +47,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().loginPage("/login").loginProcessingUrl("/login")
                 .permitAll()
                 .successHandler((httpServletRequest, httpServletResponse, authentication) -> {
+                    Enumeration<?> enumeration = httpServletRequest.getSession().getAttributeNames();
+                    while (enumeration.hasMoreElements()) {
+                        String name = enumeration.nextElement().toString();
+                        Object value = httpServletRequest.getSession().getAttribute(name);
+                        logger.warn(name + ":" + value);
+                    }
                     httpServletResponse.setContentType("application/json;charset=utf-8");
                     PrintWriter printWriter = httpServletResponse.getWriter();
-                    printWriter.write(new ObjectMapper().writeValueAsString(Result.success().add("UserInfo", authentication.getPrincipal())));
+                    Result result = Result.success().add("UserInfo", authentication.getPrincipal());
+                    printWriter.write(new ObjectMapper().writeValueAsString(result));
                     printWriter.flush();
                     printWriter.close();
                 })
                 .failureHandler(((httpServletRequest, httpServletResponse, e) -> {
-                    Logger logger = LoggerFactory.getLogger(getClass());
                     logger.warn(httpServletRequest.getParameter("username"));
                     logger.warn(httpServletRequest.getParameter("password"));
                     logger.warn(httpServletResponse.toString());
